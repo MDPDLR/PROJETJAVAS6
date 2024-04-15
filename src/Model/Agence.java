@@ -8,12 +8,14 @@ public class Agence {
     private String nom;
     private List<Admin> admins;
     private List<Voiture> voitures;
+    private List<Client> clients;
 
     // Constructeur
     public Agence(String nom) {
         this.nom = nom;
         this.admins = new ArrayList<>();
         this.voitures = new ArrayList<>();
+        this.clients = new ArrayList<>();
     }
 
     // Méthodes
@@ -42,6 +44,14 @@ public class Agence {
         this.voitures = voitures;
     }
 
+    public List<Client> getClients() {
+        return clients;
+    }
+
+    public void setClients(List<Client> clients) {
+        this.clients = clients;
+    }
+
     public void ajouterAdmin(Admin admin) {
         this.admins.add(admin);
     }
@@ -50,29 +60,17 @@ public class Agence {
         this.voitures.add(voiture);
     }
 
-    public void mofierVehicule(int voitureID, String modele, String marque, int type, float prix, boolean disponibilite) {
-        for (Voiture voiture : this.voitures) {
-            if (voiture.getVoitureID() == voitureID) {
-                voiture.setModele(modele);
-                voiture.setMarque(marque);
-                voiture.setType(type);
-                voiture.setPrix(prix);
-                voiture.setDisponibilite(disponibilite);
-                break;
-            }
-        }
+    public void ajoutClient(Client client) {
+        this.clients.add(client);
     }
 
-    public void retirerVehicule(int voitureID) {
-        this.voitures.removeIf(voiture -> voiture.getVoitureID() == voitureID);
-    }
-
-    public boolean connexionAdmin(int id, String mdp) {
-        for (Admin admin : this.admins) {
-            if (admin.verifierIdentifiants(id, mdp)) {
-                return true; // Connexion réussie
-            }
-        }
-        return false; // Échec de la connexion
+    @Override
+    public String toString() {
+        return "Agence{" +
+                "nom='" + nom + '\'' +
+                ", \nadmins=" + admins +
+                ", \nvoitures=" + voitures +
+                ", \nclients=" + clients +
+                '}';
     }
 }
