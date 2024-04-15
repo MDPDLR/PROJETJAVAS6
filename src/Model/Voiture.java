@@ -1,3 +1,5 @@
+package Model;
+
 public class Voiture {
     private int voitureID;
     private String modele;
