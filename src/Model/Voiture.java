@@ -1,14 +1,17 @@
 package Model;
 
 public class Voiture {
-    private int voitureID;
+    private String voitureID;
     private String modele;
     private String marque;
     private int type;
     private float prix;
     private boolean disponibilite;
 
-    public Voiture(int voitureID, String modele, String marque, int type, float prix, boolean disponibilite) {
+    public Voiture(){
+        this.voitureID = null;
+    }
+    public Voiture(String voitureID, String modele, String marque, int type, float prix, boolean disponibilite) {
         this.voitureID = voitureID;
         this.modele = modele;
         this.marque = marque;
@@ -17,13 +20,12 @@ public class Voiture {
         this.disponibilite = disponibilite;
     }
 
-    // Getters et setters
 
-    public int getVoitureID() {
+    public String getVoitureID() {
         return voitureID;
     }
 
-    public void setVoitureID(int voitureID) {
+    public void setVoitureID(String voitureID) {
         this.voitureID = voitureID;
     }
 
@@ -67,11 +69,15 @@ public class Voiture {
         this.disponibilite = disponibilite;
     }
 
-    public void louer() {
-        this.disponibilite = false;
-    }
-
-    public void retour() {
-        this.disponibilite = true;
+    @Override
+    public String toString() {
+        return "Voiture{" +
+                "voitureID=" + voitureID +
+                ", modele='" + modele + '\'' +
+                ", marque='" + marque + '\'' +
+                ", type=" + type +
+                ", prix=" + prix +
+                ", disponibilite=" + disponibilite +
+                '}';
     }
 }

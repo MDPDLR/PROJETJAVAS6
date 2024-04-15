@@ -50,7 +50,7 @@ public class Agence {
         this.voitures.add(voiture);
     }
 
-    public void mofierVehicule(int voitureID, String modele, String marque, int type, float prix, boolean disponibilite) {
+    public void mofierVehicule(String voitureID, String modele, String marque, int type, float prix, boolean disponibilite) {
         for (Voiture voiture : this.voitures) {
             if (voiture.getVoitureID() == voitureID) {
                 voiture.setModele(modele);
@@ -63,7 +63,7 @@ public class Agence {
         }
     }
 
-    public void retirerVehicule(int voitureID) {
+    public void retirerVehicule(String voitureID) {
         this.voitures.removeIf(voiture -> voiture.getVoitureID() == voitureID);
     }
 

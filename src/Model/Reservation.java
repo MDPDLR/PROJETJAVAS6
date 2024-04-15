@@ -1,5 +1,4 @@
 package Model;
-
 import java.util.Date;
 
 public class Reservation {
@@ -7,12 +6,16 @@ public class Reservation {
     private Date dateDebut;
     private int duree;
     private int montant;
+    private Voiture voiture;
+    private Client client;
 
-    public Reservation(int bookID, Date dateDebut, int duree) {
+    public Reservation(int bookID, Date dateDebut, int duree, Voiture voiture, Client client) {
         this.bookID = bookID;
         this.dateDebut = dateDebut;
         this.duree = duree;
-        this.montant = 0; // Initialisé à 0, sera calculé plus tard
+        this.montant = (int)(voiture.getPrix() * this.duree);
+        this.voiture = voiture;
+        this.client = client;
     }
 
     // Getters et setters
@@ -49,9 +52,14 @@ public class Reservation {
         this.montant = montant;
     }
 
-    public void calculMontant(Voiture voiture) {
-        if (voiture != null) {
-            this.montant = (int) (voiture.getPrix() * this.duree);
-        }
+    // Getter et setter pour l'attribut Voiture
+
+    public Voiture getVoiture() {
+        return voiture;
     }
+
+    public void setVoiture(Voiture voiture) {
+        this.voiture = voiture;
+    }
+
 }
