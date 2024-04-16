@@ -84,7 +84,7 @@ public class VoitureDAOImpl implements VoitureDAO {
         voiture.setVoitureID(resultSet.getString("id"));
         voiture.setMarque(resultSet.getString("marque"));
         voiture.setModele(resultSet.getString("modele"));
-        voiture.setType(resultSet.getInt("type"));
+        voiture.setType(resultSet.getString("type"));
         voiture.setPrix(resultSet.getFloat("prix_par_jour"));
         voiture.setDisponibilite(resultSet.getBoolean("disponible"));
         return voiture;

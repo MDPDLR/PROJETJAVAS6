@@ -9,7 +9,6 @@ public class Admin {
         this.mdpEmploye = mdpEmploye;
     }
 
-    // Getters et setters
 
     public int getIdEmploye() {
         return idEmploye;

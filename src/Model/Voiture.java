@@ -4,14 +4,14 @@ public class Voiture {
     private String voitureID;
     private String modele;
     private String marque;
-    private int type;
+    private String type;
     private float prix;
     private boolean disponibilite;
 
     public Voiture(){
         this.voitureID = null;
     }
-    public Voiture(String voitureID, String modele, String marque, int type, float prix) {
+    public Voiture(String voitureID, String modele, String marque, String type, float prix) {
         this.voitureID = voitureID;
         this.modele = modele;
         this.marque = marque;
@@ -45,11 +45,11 @@ public class Voiture {
         this.marque = marque;
     }
 
-    public int isType() {
+    public String  isType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(String type) {
         this.type = type;
     }
 
@@ -68,6 +68,12 @@ public class Voiture {
     public void setDisponibilite(boolean disponibilite) {
         this.disponibilite = disponibilite;
     }
+
+    public String getType() {
+        return type;
+    }
+
+
 
     @Override
     public String toString() {
