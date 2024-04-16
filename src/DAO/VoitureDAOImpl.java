@@ -1,56 +1,82 @@
 package DAO;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import Model.Voiture;
 
-import java.sql.*;
 public class VoitureDAOImpl implements VoitureDAO {
-    private final String URL = "jdbc:mysql://localhost:3306/location_voiture";
-    private final String USERNAME = "utilisateur";
-    private final String PASSWORD = "motdepasse";
+    private Connection connection;
+
+    public VoitureDAOImpl(Connection connection) {
+        this.connection = connection;
+    }
 
     @Override
     public List<Voiture> getVoituresDisponibles() {
         List<Voiture> voitures = new ArrayList<>();
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM voitures WHERE disponible = true");
+        String query = "SELECT * FROM Voiture WHERE Disponible = true";
+        
+        try (PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
             while (resultSet.next()) {
-                Voiture voiture = resultSetToVoiture(resultSet);
+                Voiture voiture = new Voiture();
+                voiture.setId(resultSet.getString("ID"));
+                voiture.setMarque(resultSet.getString("Marque"));
+                voiture.setModele(resultSet.getString("Modele"));
+                voiture.setDisponible(resultSet.getBoolean("Disponible"));
+                // Set other car attributes
+                
                 voitures.add(voiture);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
         return voitures;
     }
 
     @Override
     public Voiture getVoitureById(String id) {
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("SELECT * FROM voitures WHERE id = ?");
-             ResultSet resultSet = statement.executeQuery()) {
-            if (resultSet.next()) {
-                return resultSetToVoiture(resultSet);
+        String query = "SELECT * FROM Voiture WHERE ID = ?";
+        
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    Voiture voiture = new Voiture();
+                    voiture.setId(resultSet.getString("ID"));
+                    voiture.setMarque(resultSet.getString("Marque"));
+                    voiture.setModele(resultSet.getString("Modele"));
+                    voiture.setDisponible(resultSet.getBoolean("Disponible"));
+                    // Set other car attributes
+                    
+                    return voiture;
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        
         return null;
     }
 
     @Override
     public void ajouterVoiture(Voiture voiture) {
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("INSERT INTO voitures (id, marque, modele, type, prix_par_jour, disponible) VALUES (?, ?, ?, ?, ?, ?)")) {
-            statement.setString(1, voiture.getVoitureID());
+        String query = "INSERT INTO Voiture (ID, Marque, Modele, Disponible) VALUES (?, ?, ?, ?)";
+        
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, voiture.getId());
             statement.setString(2, voiture.getMarque());
             statement.setString(3, voiture.getModele());
-            statement.setString(4, voiture.getModele());
-            statement.setDouble(5, voiture.getPrix());
-            statement.setBoolean(6, voiture.isDisponible());
-            statement.executeUpdate();
+            statement.setBoolean(4, voiture.isDisponible());
+            
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("La voiture a été ajoutée avec succès.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -58,10 +84,15 @@ public class VoitureDAOImpl implements VoitureDAO {
 
     @Override
     public void supprimerVoiture(String id) {
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("DELETE FROM voitures WHERE id = ?")) {
+        String query = "DELETE FROM Voiture WHERE ID = ?";
+        
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, id);
-            statement.executeUpdate();
+            
+            int rowsDeleted = statement.executeUpdate();
+            if (rowsDeleted > 0) {
+                System.out.println("La voiture a été supprimée avec succès.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -69,25 +100,18 @@ public class VoitureDAOImpl implements VoitureDAO {
 
     @Override
     public void modifierDisponibiliteVoiture(String id, boolean disponible) {
-        try (Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-             PreparedStatement statement = connection.prepareStatement("UPDATE voitures SET disponible = ? WHERE id = ?")) {
+        String query = "UPDATE Voiture SET Disponible = ? WHERE ID = ?";
+        
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setBoolean(1, disponible);
             statement.setString(2, id);
-            statement.executeUpdate();
+            
+            int rowsUpdated = statement.executeUpdate();
+            if (rowsUpdated > 0) {
+                System.out.println("La disponibilité de la voiture a été modifiée avec succès.");
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-
-    private Voiture resultSetToVoiture(ResultSet resultSet) throws SQLException {
-        Voiture voiture = new Voiture();
-        voiture.setVoitureID(resultSet.getString("id"));
-        voiture.setMarque(resultSet.getString("marque"));
-        voiture.setModele(resultSet.getString("modele"));
-        voiture.setType(resultSet.getInt("type"));
-        voiture.setPrix(resultSet.getFloat("prix_par_jour"));
-        voiture.setDisponibilite(resultSet.getBoolean("disponible"));
-        return voiture;
-    }
 }
-
