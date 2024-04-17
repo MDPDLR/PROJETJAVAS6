@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonBar?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projetjavas6.SceneController">
+    <children>
+        <Pane prefHeight="39.0" prefWidth="800.0" style="-fx-background-color: #6614b8;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <children>
+                <Text layoutX="280.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ECE-LOCATION" wrappingWidth="239.73683166503906">
+                    <font>
+                        <Font name="System Bold Italic" size="31.0" />
+                    </font>
+                </Text>
+            </children>
+        </Pane>
+      <Pane layoutY="39.0" prefHeight="461.0" prefWidth="800.0" style="-fx-background-color: #22103A;">
+         <children>
+            <Text fill="WHITE" layoutX="519.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Notre equipe " wrappingWidth="192.73683166503906">
+               <font>
+                  <Font name="System Bold Italic" size="30.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="91.0" layoutY="94.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Notre histoire " wrappingWidth="219.73683166503906">
+               <font>
+                  <Font name="System Bold Italic" size="30.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="105.0" fitWidth="115.0" layoutX="476.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@image/djo.png" />
+               </image></ImageView>
+            <ImageView fitHeight="105.0" fitWidth="115.0" layoutX="639.0" layoutY="116.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@image/mael.png" />
+               </image></ImageView>
+            <Text fill="WHITE" layoutX="53.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Depuis sa création en 2024, ECE-location incarne l'esprit de liberté et de mobilité. Fondée par Nasser al khelaifi, notre entreprise s'est engagée à fournir des solutions de location de voitures fiables et abordables. Au fil des années, nous avons élargi notre gamme de véhicules et perfectionné notre service client, tout en restant fidèles à notre engagement envers la qualité et la satisfaction du client. Chez ECE-location, chaque kilomètre parcouru est une histoire à raconter, et nous sommes fiers de faire partie de vos aventures." textAlignment="JUSTIFY" wrappingWidth="294.73683166503906">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="105.0" fitWidth="127.0" layoutX="478.0" layoutY="271.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@image/paul.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="97.0" fitWidth="105.0" layoutX="640.0" layoutY="275.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@image/martin.png" />
+               </image>
+            </ImageView>
+            <Text fill="WHITE" layoutX="485.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Geoffroy BL" wrappingWidth="87.73683166503906">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="644.0" layoutY="246.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mael Coredo" wrappingWidth="94.73683166503906">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="466.0" layoutY="400.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Paul de Contades" wrappingWidth="124.73683166503906">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
+               </font>
+            </Text>
+            <Text fill="WHITE" layoutX="629.0" layoutY="399.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Martin de Perreti" wrappingWidth="124.73683166503906">
+               <font>
+                  <Font name="System Bold Italic" size="15.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
+        <ButtonBar layoutX="-14.0" layoutY="46.0" prefHeight="40.0" prefWidth="809.0">
+            <buttons>
+                <Button mnemonicParsing="false" onAction="#switchToMenu" opacity="0.5" prefHeight="26.0" prefWidth="173.0" text="Menu" textFill="#22103a" />
+                <Button mnemonicParsing="false" onAction="#switchToLocation" opacity="0.5" text="Location" textFill="#22103a" />
+                <Button mnemonicParsing="false" onAction="#switchToReservations" opacity="0.5" text="Mes reservations" textFill="#22103a" />
+                <Button mnemonicParsing="false" onAction="#switchToContact" text="Contact" textFill="#22103a" />
+                <Button mnemonicParsing="false" onAction="#switchToConnexion" opacity="0.5" prefHeight="26.0" text="Mon compte" textFill="#22103a" />
+            </buttons>
+        </ButtonBar>
+    </children>
+</AnchorPane>

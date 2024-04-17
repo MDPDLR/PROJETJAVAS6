@@ -4,20 +4,21 @@ public class Voiture {
     private String voitureID;
     private String modele;
     private String marque;
-    private String type;
+    private int type;
     private float prix;
     private boolean disponibilite;
-
+    private String photo;
     public Voiture(){
         this.voitureID = null;
     }
-    public Voiture(String voitureID, String modele, String marque, String type, float prix) {
+    public Voiture(String voitureID, String modele, String marque, int type, float prix) {
         this.voitureID = voitureID;
         this.modele = modele;
         this.marque = marque;
         this.type = type;
         this.prix = prix;
         this.disponibilite = true;
+        this.photo = type +".png";
     }
 
 
@@ -45,11 +46,11 @@ public class Voiture {
         this.marque = marque;
     }
 
-    public String  isType() {
+    public int  isType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 
@@ -69,11 +70,17 @@ public class Voiture {
         this.disponibilite = disponibilite;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
+    public String getPhoto() {
+        return photo;
+    }
 
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
 
     @Override
     public String toString() {

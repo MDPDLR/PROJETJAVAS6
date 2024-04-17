@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VoitureDAOImpl extends DAO implements VoitureDAO {
+public class VoitureDAOImpl implements VoitureDAO {
 
     private Connection connection;
 
@@ -30,8 +30,10 @@ public class VoitureDAOImpl extends DAO implements VoitureDAO {
                 voiture.setMarque(resultSet.getString("Marque"));
                 voiture.setModele(resultSet.getString("Modele"));
                 voiture.setDisponibilite(resultSet.getBoolean("Disponibilite"));
-                voiture.setType(resultSet.getString("Type")); // Ajout de Type
+                voiture.setType(resultSet.getInt("Type")); // Ajout de Type
                 voiture.setPrix(resultSet.getFloat("Prix_j")); // Ajout de Prix_j
+                voiture.setPhoto(resultSet.getString("photo"));
+
                 // Set other car attributes
 
                 voitures.add(voiture);
@@ -57,8 +59,10 @@ public class VoitureDAOImpl extends DAO implements VoitureDAO {
                 voiture.setMarque(resultSet.getString("Marque"));
                 voiture.setModele(resultSet.getString("Modele"));
                 voiture.setDisponibilite(resultSet.getBoolean("Disponibilite"));
-                voiture.setType(resultSet.getString("Type")); // Ajout de Type
+                voiture.setType(resultSet.getInt("Type")); // Ajout de Type
                 voiture.setPrix(resultSet.getFloat("Prix_j")); // Ajout de Prix_j
+                voiture.setPhoto(resultSet.getString("photo"));
+
                 // Set other car attributes
 
                 voitures.add(voiture);
@@ -83,8 +87,10 @@ public class VoitureDAOImpl extends DAO implements VoitureDAO {
                     voiture.setMarque(resultSet.getString("Marque"));
                     voiture.setModele(resultSet.getString("Modele"));
                     voiture.setDisponibilite(resultSet.getBoolean("Disponibilite"));
-                    voiture.setType(resultSet.getString("Type")); // Ajout de Type
+                    voiture.setType(resultSet.getInt("Type")); // Ajout de Type
                     voiture.setPrix(resultSet.getFloat("Prix_j")); // Ajout de Prix_j
+                    voiture.setPhoto(resultSet.getString("photo"));
+
                     // Set other car attributes
 
                     return voiture;
@@ -106,9 +112,9 @@ public class VoitureDAOImpl extends DAO implements VoitureDAO {
             statement.setString(2, voiture.getMarque());
             statement.setString(3, voiture.getModele());
             statement.setBoolean(4, voiture.isDisponible());
-            statement.setString(5, voiture.getType()); // Ajout de Type
+            statement.setInt(5, voiture.getType()); // Ajout de Type
             statement.setFloat(6, voiture.getPrix()); // Ajout de Prix_j
-
+            statement.setString(7, voiture.getPhoto()); // Ajout de Prix_j
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
                 System.out.println("La voiture a été ajoutée avec succès.");

@@ -4,19 +4,18 @@ import Model.Client;
 import Model.Reservation;
 import Model.Voiture;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ClientDAOImpl implements ClientDAO {
     private Connection connection;
-    public ClientDAOImpl(Connection connection) {
-        this.connection = connection;
-    }
 
+    @Override
+    public void connect(String URLDataBase, String LoginDataBase, String PwdDataBase) throws SQLException, ClassNotFoundException {
+        Class.forName("com.mysql.jdbc.Driver");
+        connection = DriverManager.getConnection(URLDataBase, LoginDataBase, PwdDataBase);
+    }
 
     @Override
     public List<Client> getAllClients() {
