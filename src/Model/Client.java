@@ -12,6 +12,15 @@ public class Client {
     private boolean statutMembre;
     private List<Reservation> reservations;
 
+    public Client() {
+        this.mail = "";
+        this.mdp = "";
+        this.prenom = "";
+        this.nom = "";
+        this.type = 0;
+        this.statutMembre = false;
+        this.reservations = new ArrayList<>();
+    }
 
     // Constructeur
     public Client(String mail, String mdp, String prenom, String nom, int type, boolean statutMembre) {

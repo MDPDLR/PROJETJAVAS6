@@ -1,28 +1,42 @@
 import Controller.ClientController;
 import Controller.ReservationController;
 import Controller.VoitureController;
+import DAO.*;
 import Model.Client;
 import Model.Reservation;
 import Model.Voiture;
-import java.time.LocalDate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.sql.SQLException;
+import java.time.LocalDate;
 
 public class Test {
     public static void main(String[] args) {
-        VoitureController voitureController = new VoitureController();
-        ClientController clientController = new ClientController();
-        ReservationController reservationController = new ReservationController();
-        Voiture voiture = new Voiture("12332","urus","lamborghini","SUV",2122);
-        Voiture voiture2 = new Voiture("rerwe","roejr","lamrereborghini","Berline",2122);
-        voitureController.ajouterVoiture(voiture);
-        voitureController.ajouterVoiture(voiture2);
-        Client client = new Client("ugjg@gmail.com","464665","Martin","de Peretti",1,true);
-        clientController.ajouterClient(client);
-        Reservation resa = new Reservation(323,LocalDate.now(),LocalDate.now(),voiture );
-        reservationController.ajouterReservation(resa);
-        clientController.ajouterReservation(client,resa);
+        try {
+            // Crée une instance de VoitureDAOImpl et connecte-toi à la base de données
+            VoitureDAOImpl voitureDAOImpl = new VoitureDAOImpl();
+            voitureDAOImpl.connect("jdbc:mysql://localhost:8889/Projet-LocationDeVoiture", "root", "root");
+            // Crée une instance de VoitureController en lui passant VoitureDAOImpl
+            VoitureController voitureController = new VoitureController(voitureDAOImpl);
+            Client client = new Client("martindeperetti@gmail.com","dssds","dsdsd","dsdsds",2,true);
 
-        reservationController.afficherReservations();
-        //clientController.afficherClients();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
+
+            LocalDate dateDebut = LocalDate.parse("01/01/01", formatter);
+            LocalDate dateFin = LocalDate.parse("03/01/01", formatter);
+
+            Reservation resa = new Reservation(2121,dateDebut,dateFin,voitureDAOImpl.getVoitureById("123243"),client);
+            ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl();
+            reservationDAOImpl.connect("jdbc:mysql://localhost:8889/Projet-LocationDeVoiture", "root", "root");
+            ReservationController reservationController = new ReservationController(reservationDAOImpl);
+            reservationController.ajouterReservation(resa);
+
+            System.out.println(reservationController.toString());
+            // Affiche la liste des voitures
+            //System.out.println(voitureController.toString());
+        } catch (SQLException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

@@ -7,6 +7,7 @@ public class Reservation {
     private LocalDate dateFin;
     private int montant;
     private Voiture voiture;
+    private String mailClient;
 
     public Reservation() {
         // Initialisation des attributs avec des valeurs par défaut
@@ -17,11 +18,12 @@ public class Reservation {
         this.voiture = null;
     }
 
-    public Reservation(int bookID, LocalDate dateDebut, LocalDate dateFin, Voiture voiture) {
+    public Reservation(int bookID, LocalDate dateDebut, LocalDate dateFin, Voiture voiture,Client client) {
         this.bookID = bookID;
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.voiture = voiture;
+        this.mailClient = client.getMail();
         calculMontant();
         voiture.setDisponibilite(false);
     }
@@ -81,6 +83,17 @@ public class Reservation {
         this.montant = (int) (diffDays * voiture.getPrix());
     }
 
+    public void setMailClient(String mailClient) {
+        this.mailClient = mailClient;
+    }
+
+    public String getMailClient() {
+        return mailClient;
+    }
+
+    public void setDateFin(LocalDate dateFin) {
+        this.dateFin = dateFin;
+    }
 
     @Override
     public String toString() {
@@ -90,6 +103,7 @@ public class Reservation {
                 ", dateFin=" + dateFin +
                 ", montant=" + montant +
                 ", voiture=" + voiture +
+                ", mailClient='" + mailClient + '\'' +
                 '}';
     }
 }
