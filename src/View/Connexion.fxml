@@ -9,7 +9,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.projetjavas6.SceneController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SceneController">
     <children>
         <Pane prefHeight="39.0" prefWidth="800.0" style="-fx-background-color: #6614b8;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <children>
@@ -34,6 +34,6 @@
                 <Button mnemonicParsing="false" onAction="#switchToConnexion" prefHeight="26.0" text="Mon compte" textFill="#22103a" />
             </buttons>
         </ButtonBar>
-      <Text fill="WHITE" layoutX="67.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connexion" />
+      <Text fill="WHITE" layoutX="729.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Connexion" />
     </children>
 </AnchorPane>

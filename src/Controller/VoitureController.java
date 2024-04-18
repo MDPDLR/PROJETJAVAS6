@@ -18,11 +18,28 @@ public class VoitureController {
     }
 
     // Méthode pour ajouter une voiture à la liste et à la base de données
-    public void ajouterVoiture(Voiture voiture) {
-        voitures.add(voiture);
-        // Ajouter la voiture à la base de données
-        voitureDAO.ajouterVoiture(voiture);
-        System.out.println("Voiture ajoutée avec succès : " + voiture);
+    public void ajouterVoiture(String voitureID, String modele, String marque, int type, float prix) {
+        for (Voiture v : voitures) {
+            if (v.getVoitureID().equals(voitureID)) {
+                System.out.println("Une voiture avec le même ID existe déjà dans la liste.");
+                return;
+            }
+        }
+
+        Voiture nouvelleVoiture = new Voiture(voitureID, modele, marque, type, prix);
+
+        voitures.add(nouvelleVoiture);
+        voitureDAO.ajouterVoiture(nouvelleVoiture);
+        System.out.println("Voiture ajoutée avec succès : " + nouvelleVoiture);
+    }
+
+    public Voiture getVoitureById(String voitureId) {
+        for (Voiture voiture : voitures) {
+            if (voiture.getVoitureID().equals(voitureId)) {
+                return voiture;
+            }
+        }
+        return null; // Return null if the car with the given ID is not found
     }
 
     // Méthode pour trier et afficher les voitures par type
@@ -54,9 +71,39 @@ public class VoitureController {
                 break;
             }
         }
-
-
     }
+
+
+
+    public void supprimerVoiture(String voitureId) {
+        // Recherche de la voiture dans la liste par son ID
+        Voiture voitureToRemove = null;
+        for (Voiture voiture : voitures) {
+            if (voiture.getVoitureID().equals(voitureId)) {
+                voitureToRemove = voiture;
+                break;
+            }
+        }
+
+        if (voitureToRemove != null) {
+            // Supprimer la voiture de la base de données
+            voitureDAO.supprimerVoiture(voitureId);
+
+            // Supprimer la voiture de la liste de voitures du contrôleur
+            if (voitures.remove(voitureToRemove)) {
+                System.out.println("La voiture a été supprimée avec succès dans le controller");
+            } else {
+                System.out.println("La voiture avec l'ID " + voitureId + " n'a pas été trouvée dans la liste.");
+            }
+        } else {
+            System.out.println("La voiture avec l'ID " + voitureId + " n'a pas été trouvée dans la liste.");
+        }
+    }
+
+
+
+
+
 
 
     @Override

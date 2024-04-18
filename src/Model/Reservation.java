@@ -5,27 +5,24 @@ public class Reservation {
     private int bookID;
     private LocalDate dateDebut;
     private LocalDate dateFin;
-    private int montant;
+    private float montant;
     private Voiture voiture;
     private String mailClient;
 
     public Reservation() {
         // Initialisation des attributs avec des valeurs par défaut
-        this.bookID = 0;
         this.dateDebut = null;
         this.dateFin = null;
         this.montant = 0;
         this.voiture = null;
     }
 
-    public Reservation(int bookID, LocalDate dateDebut, LocalDate dateFin, Voiture voiture,Client client) {
-        this.bookID = bookID;
+    public Reservation(LocalDate dateDebut, LocalDate dateFin, Voiture voiture,Client client) {
         this.dateDebut = dateDebut;
         this.dateFin = dateFin;
         this.voiture = voiture;
         this.mailClient = client.getMail();
-        calculMontant();
-        voiture.setDisponibilite(false);
+        this.montant =  (this.diffDays(dateDebut,dateFin)*this.voiture.getPrix()) ;
     }
 
     public void RetourVoiture(){
@@ -61,11 +58,11 @@ public class Reservation {
         this.dateFin = dateFin;
     }
 
-    public int getMontant() {
+    public float getMontant() {
         return montant;
     }
 
-    public void setMontant(int montant) {
+    public void setMontant(float montant) {
         this.montant = montant;
     }
 
@@ -78,9 +75,9 @@ public class Reservation {
     public void setVoiture(Voiture voiture) {
         this.voiture = voiture;
     }
-    private void calculMontant() {
+    private int diffDays(LocalDate dateDebut, LocalDate dateFin) {
         long diffDays = java.time.temporal.ChronoUnit.DAYS.between(dateDebut, dateFin);
-        this.montant = (int) (diffDays * voiture.getPrix());
+        return (int) diffDays;
     }
 
     public void setMailClient(String mailClient) {

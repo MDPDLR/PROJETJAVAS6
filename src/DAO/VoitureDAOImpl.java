@@ -105,7 +105,7 @@ public class VoitureDAOImpl implements VoitureDAO {
 
     @Override
     public void ajouterVoiture(Voiture voiture) {
-        String query = "INSERT INTO Voiture (voitureID, Marque, Modele, Disponibilite, Type, Prix_j) VALUES (?, ?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Voiture (voitureID, Marque, Modele, Disponibilite, Type, Prix_j, Photo) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, voiture.getVoitureID());
@@ -126,7 +126,7 @@ public class VoitureDAOImpl implements VoitureDAO {
 
     @Override
     public void supprimerVoiture(String id) {
-        String query = "DELETE FROM Voiture WHERE ID = ?";
+        String query = "DELETE FROM Voiture WHERE VoitureID = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, id);

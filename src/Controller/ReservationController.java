@@ -1,8 +1,11 @@
 package Controller;
 
 import DAO.ReservationDAO;
+import Model.Client;
 import Model.Reservation;
 import Model.Voiture;
+import java.time.LocalDate;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +20,6 @@ public class ReservationController {
         this.reservations = reservationDAO.getAllReservations();
     }
 
-
-    // Méthode pour ajouter une réservation
-    public void ajouterReservation(Reservation reservation) {
-        reservationDAO.ajouterReservation(reservation);
-        reservations.add(reservation);
-        System.out.println("Réservation ajoutée avec succès : " + reservation);
-    }
 
     // Méthode pour supprimer une réservation
     public void supprimerReservation(Reservation reservation) {
@@ -54,6 +50,14 @@ public class ReservationController {
                 System.out.println(reservation.toString());
             }
         }
+    }
+
+    public ReservationDAO getReservationDAO() {
+        return reservationDAO;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
     }
 
     @Override

@@ -69,7 +69,7 @@ public class ClientDAOImpl implements ClientDAO {
 
     @Override
     public void insertClient(Client client) {
-        String query = "INSERT INTO Client (Email, Prenom, Nom, Type, StatutMembre) VALUES (?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Client (Email, Prenom, Nom, Type, StatutMembre, mdp) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, client.getMail());
@@ -77,6 +77,7 @@ public class ClientDAOImpl implements ClientDAO {
             statement.setString(3, client.getNom());
             statement.setInt(4, client.getType());
             statement.setBoolean(5, client.isStatutMembre()); // Utilisation du type booléen
+            statement.setString(6, client.getMdp()); // Utilisation du type booléen
 
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
@@ -182,7 +183,7 @@ public class ClientDAOImpl implements ClientDAO {
             statement.setString(1, reservation.getVoiture().getVoitureID());
             statement.setString(2, reservation.getMailClient());
             statement.setDate(3, java.sql.Date.valueOf(reservation.getDateDebut()));
-            statement.setInt(4, reservation.getMontant());
+            statement.setFloat( 4, reservation.getMontant());
             statement.setDate(5, java.sql.Date.valueOf(reservation.getDateFin()));
 
             int rowsInserted = statement.executeUpdate();

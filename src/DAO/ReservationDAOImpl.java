@@ -23,7 +23,7 @@ public class ReservationDAOImpl implements ReservationDAO {
             statement.setString(1, reservation.getVoiture().getVoitureID());
             statement.setString(2, reservation.getMailClient());
             statement.setDate(3, java.sql.Date.valueOf(reservation.getDateDebut()));
-            statement.setInt(4, reservation.getMontant());
+            statement.setFloat(4, reservation.getMontant());
             statement.setDate(5, java.sql.Date.valueOf(reservation.getDateFin()));
 
             int rowsInserted = statement.executeUpdate();
