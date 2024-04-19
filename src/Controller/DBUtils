@@ -1,0 +1,159 @@
+package org.example.projettest;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+import org.example.projettest.Controller.SeConnecterController;
+
+import java.io.IOException;
+import java.sql.*;
+
+public class DBUtils {
+
+    public static void changeScene(ActionEvent event, String fxmlFile, String title, String username){
+        Parent root = null;
+
+        if(username != null){
+            try {
+                FXMLLoader loader = new FXMLLoader(DBUtils.class.getResource(fxmlFile));
+                root = loader.load();
+                SeConnecterController seConnecterController = loader.getController();
+                seConnecterController.setUserInformation(username);
+            }  catch (IOException e){
+                e.printStackTrace();
+            }
+        }else{
+            try{
+                root = FXMLLoader.load(DBUtils.class.getResource(fxmlFile));
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+        }
+        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
+        stage.setTitle(title);
+        stage.setScene(new Scene(root, 800,500));
+        stage.show();
+    }
+
+    public static void signUpUser(ActionEvent event,String Email, String mdp, String Prenom, String Nom, String Type, int StatutMembre){
+        Connection connection = null;
+        PreparedStatement psInsert = null;
+        PreparedStatement psCheckUserExists = null;
+        ResultSet resultSet= null;
+
+        try {
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/projet-locationdevoiture","root", "");
+            psCheckUserExists = connection.prepareStatement("SELECT * FROM client WHERE Email = ? ");
+            psCheckUserExists.setString(1,Email);
+            resultSet = psCheckUserExists.executeQuery();
+
+            if (resultSet.isBeforeFirst()){
+                System.out.println("utilisateur déjà existant");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setContentText("Vous ne pouvez pas utiliser cet id");
+                alert.show();
+
+            }else {
+                psInsert = connection.prepareStatement("INSERT INTO client (Email,mdp,Prenom,Nom,Type,StatutMembre) VALUES (?,?,?,?,?,?)");
+                psInsert.setString(1,Email);
+                psInsert.setString(2,mdp);
+                psInsert.setString(3,Prenom);
+                psInsert.setString(4,Nom);
+                psInsert.setString(5,Type);
+                psInsert.setInt(6,StatutMembre);
+                psInsert.executeUpdate();
+                changeScene(event, "Menu.fxml", "Welcome!",Email);
+            }
+
+        }catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            if(resultSet != null){
+                try{
+                    resultSet.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+                if(psCheckUserExists != null){
+                    try{
+                        psCheckUserExists.close();
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                }
+                if (psInsert != null){
+                    try{
+                        psInsert.close();
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                }
+                if (connection != null){
+                    try{
+                        connection.close();
+                    }catch (SQLException e){
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    }
+    public static void logInUser (ActionEvent event, String Email, String mdp){
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
+        try{
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/projet-locationdevoiture","root", "");
+            preparedStatement = connection.prepareStatement("SELECT mdp FROM client WHERE Email = ?");
+            preparedStatement.setString(1,Email);
+            resultSet = preparedStatement.executeQuery();
+
+            if (!resultSet.isBeforeFirst()){
+                System.out.println("utilisateur inconnu");
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.show();
+            }else {
+                while(resultSet.next()){
+                    String retrievedmdp = resultSet.getString("mdp");
+                    if (retrievedmdp.equals(mdp)){
+                        changeScene(event, "Menu.fxml","Welcome!",Email);
+                    }else {
+                        System.out.println("mauvais mdp");
+                        Alert alert = new Alert(Alert.AlertType.ERROR);
+                        alert.setContentText("mdp fourni incorrect");
+                         alert.show();
+                    }
+                }
+
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }finally {
+            if (resultSet != null){
+                try{
+                    resultSet.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+            if (preparedStatement != null){
+                try{
+                    preparedStatement.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+            if (connection != null){
+                try {
+                    connection.close();
+                }catch (SQLException e){
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+}
