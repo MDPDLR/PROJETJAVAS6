@@ -4,6 +4,10 @@ import DAO.ReservationDAO;
 import Model.Client;
 import Model.Reservation;
 import Model.Voiture;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 
@@ -50,6 +54,9 @@ public class ReservationController {
                 System.out.println(reservation.toString());
             }
         }
+    }
+    public List<Reservation> getReservationsForClient(String email) {
+        return reservationDAO.getReservationsForClient(email);
     }
 
     public ReservationDAO getReservationDAO() {
