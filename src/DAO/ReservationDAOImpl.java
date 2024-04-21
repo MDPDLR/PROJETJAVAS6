@@ -11,7 +11,7 @@ public class ReservationDAOImpl implements ReservationDAO {
     private Connection connection;
     @Override
     public void connect(String URLDataBase, String LoginDataBase, String PwdDataBase) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(URLDataBase, LoginDataBase, PwdDataBase);
     }
 
@@ -105,7 +105,7 @@ public class ReservationDAOImpl implements ReservationDAO {
     public Voiture getVoitureById(String id) {
         VoitureDAOImpl voitureDAOImpl = new VoitureDAOImpl();
         try {
-            voitureDAOImpl.connect("jdbc:mysql://localhost:8889/Projet-LocationDeVoiture", "root", "root");
+            voitureDAOImpl.connect("jdbc:mysql://localhost:3306/Projet-LocationDeVoiture", "root", "");
 
         }
     catch (SQLException | ClassNotFoundException e) {
