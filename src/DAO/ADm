@@ -1,0 +1,24 @@
+package DAO;
+
+import java.sql.*;
+
+public class ADm {
+    private Connection connection;
+
+    public ADm(Connection connection) {
+        this.connection = connection;
+    }
+
+    public boolean validateAdmin(String id, String password) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Admin WHERE IDEmploye = ? AND Admin = ?");
+            ps.setString(1, id);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // True if credentials are valid
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}
