@@ -1,10 +1,15 @@
 package DAO;
 
+import Controller.VoitureController;
 import Model.Voiture;
 
+import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class VoitureDAOImpl implements VoitureDAO {
 
@@ -13,9 +18,10 @@ public class VoitureDAOImpl implements VoitureDAO {
 
     @Override
     public void connect(String URLDataBase, String LoginDataBase, String PwdDataBase) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(URLDataBase, LoginDataBase, PwdDataBase);
     }
+
 
     @Override
     public List<Voiture> getVoituresDisponibles() {
@@ -44,6 +50,25 @@ public class VoitureDAOImpl implements VoitureDAO {
 
         return voitures;
     }
+
+    @Override
+    public Map<String, Integer> getTypeCount() {
+        Map<String, Integer> typeCounts = new HashMap<>();
+        String query = "SELECT Type, COUNT(*) as Count FROM Voiture GROUP BY Type";
+        try (PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+            while (resultSet.next()) {
+                String type = resultSet.getString("Type");
+                int count = resultSet.getInt("Count");
+                typeCounts.put(type, count);
+            }
+        } catch (SQLException e) {
+            System.err.println("Erreur lors de la récupération du nombre de voitures par type: " + e.getMessage());
+        }
+        return typeCounts;
+    }
+
+    // Assurez-vous que la connexion ou toute configuration nécessaire est faite ici
 
 
     @Override
@@ -102,7 +127,18 @@ public class VoitureDAOImpl implements VoitureDAO {
 
         return null;
     }
-
+    public void setVehicleUnavailable(String vehicleId) {
+        String query = "UPDATE Voiture SET Disponibilite = false WHERE voitureID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, vehicleId);
+            int result = statement.executeUpdate();
+            if (result > 0) {
+                System.out.println("Mise à jour de la disponibilité du véhicule réussie.");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     @Override
     public void ajouterVoiture(Voiture voiture) {
         String query = "INSERT INTO Voiture (voitureID, Marque, Modele, Disponibilite, Type, Prix_j, Photo) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -126,20 +162,40 @@ public class VoitureDAOImpl implements VoitureDAO {
 
     @Override
     public void supprimerVoiture(String id) {
-        String query = "DELETE FROM Voiture WHERE VoitureID = ?";
+        try {
+            // Vérifiez d'abord si la voiture a des réservations
+            if (voitureHasReservations(id)) {
+                JOptionPane.showMessageDialog(null, "Impossible de supprimer la voiture: elle a des réservations actives.", "Erreur de suppression", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
-        try (PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, id);
-
-            int rowsDeleted = statement.executeUpdate();
-            if (rowsDeleted > 0) {
-                System.out.println("La voiture a été supprimée avec succès.");
+            // Si aucune réservation n'est liée à la voiture, procédez à la suppression
+            String query = "DELETE FROM Voiture WHERE VoitureID = ?";
+            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, id);
+                int rowsDeleted = statement.executeUpdate();
+                if (rowsDeleted > 0) {
+                    System.out.println("La voiture a été supprimée avec succès.");
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erreur lors de la tentative de suppression de la voiture: " + e.getMessage(), "Erreur SQL", JOptionPane.ERROR_MESSAGE);
         }
     }
-
+    public boolean voitureHasReservations(String voitureId) throws SQLException {
+        String query = "SELECT COUNT(*) FROM reservation WHERE VoitureID = ?";
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setString(1, voitureId);
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt(1) > 0;  // Retourne true si le nombre de réservations est supérieur à 0
+            }
+        } catch (SQLException e) {
+            throw new SQLException("Erreur lors de la vérification des réservations pour la voiture: " + voitureId, e);
+        }
+        return false;
+    }
     @Override
     public void modifierDisponibiliteVoiture(String id, boolean disponible) {
         String query = "UPDATE Voiture SET Disponibilite = ? WHERE voitureID = ?";
