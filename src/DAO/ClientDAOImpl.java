@@ -13,7 +13,7 @@ public class ClientDAOImpl implements ClientDAO {
 
     @Override
     public void connect(String URLDataBase, String LoginDataBase, String PwdDataBase) throws SQLException, ClassNotFoundException {
-        Class.forName("com.mysql.jdbc.Driver");
+        Class.forName("com.mysql.cj.jdbc.Driver");
         connection = DriverManager.getConnection(URLDataBase, LoginDataBase, PwdDataBase);
     }
 
@@ -30,7 +30,7 @@ public class ClientDAOImpl implements ClientDAO {
                 client.setMdp(resultSet.getString("mdp"));
                 client.setPrenom(resultSet.getString("Prenom"));
                 client.setNom(resultSet.getString("Nom"));
-                client.setType(resultSet.getInt("Type"));
+                client.setType(convertType(resultSet.getString("Type")));  // Convertissez le type ici
                 client.setStatutMembre(resultSet.getBoolean("StatutMembre"));
                 clients.add(client);
             }
@@ -42,6 +42,7 @@ public class ClientDAOImpl implements ClientDAO {
     }
 
 
+
     @Override
     public Client getClientByEmail(String email) {
         Client client = null;
@@ -49,22 +50,34 @@ public class ClientDAOImpl implements ClientDAO {
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
-            try (ResultSet resultSet = statement.executeQuery()) {
-                if (resultSet.next()) {
-                    client = new Client();
-                    client.setMail(resultSet.getString("Email"));
-                    client.setPrenom(resultSet.getString("Prenom"));
-                    client.setNom(resultSet.getString("Nom"));
-                    client.setType(resultSet.getInt("Type"));
-                    client.setStatutMembre(resultSet.getBoolean("StatutMembre"));
-                    client.setReservations(getReservationsForClient(client.getMail()));
-                }
+            ResultSet resultSet = statement.executeQuery();
+            if (resultSet.next()) {
+                client = new Client();
+                client.setMail(resultSet.getString("Email"));
+                client.setMdp(resultSet.getString("mdp"));
+                client.setPrenom(resultSet.getString("Prenom"));
+                client.setNom(resultSet.getString("Nom"));
+                // Gérer 'Type' comme une chaîne et convertir si nécessaire
+                String type = resultSet.getString("Type");
+                client.setType(convertType(type));
+                client.setStatutMembre(resultSet.getBoolean("StatutMembre"));
             }
+            resultSet.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return client;
+    }
+
+    private int convertType(String type) {
+        switch (type) {
+            case "Individuel":
+                return 0;
+            case "Entreprise":
+                return 1;
+            default:
+                return -1;  // Gestion d'erreur ou valeur par défaut
+        }
     }
 
     @Override
@@ -129,7 +142,7 @@ public class ClientDAOImpl implements ClientDAO {
     @Override
     public List<Reservation> getReservationsForClient(String email) {
         List<Reservation> reservations = new ArrayList<>();
-        String query = "SELECT * FROM Reservation WHERE ClientEmail = ?";
+        String query = "SELECT * FROM Reservation WHERE ClientID = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
@@ -165,7 +178,7 @@ public class ClientDAOImpl implements ClientDAO {
     }
 
     public void deleteReservationsForClient(String email) {
-        String query = "DELETE FROM Reservation WHERE ClientEmail = ?";
+        String query = "DELETE FROM Reservation WHERE ClientID = ?";
 
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, email);
@@ -194,7 +207,19 @@ public class ClientDAOImpl implements ClientDAO {
             e.printStackTrace();
         }
     }
-
+    public boolean validateAdmin(String idEmploye, String password) {
+        try {
+            // Assurez-vous que la requête correspond exactement aux champs de votre table admin
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM admin WHERE IDemploye = ? AND mdpEmploye = ?");
+            ps.setString(1, idEmploye);
+            ps.setString(2, password);
+            ResultSet rs = ps.executeQuery();
+            return rs.next(); // True si les identifiants sont valides
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
 }
