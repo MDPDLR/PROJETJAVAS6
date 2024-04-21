@@ -2,23 +2,21 @@ package Controller;
 
 import Model.Voiture;
 import DAO.VoitureDAO;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import DAO.VoitureDAOImpl;
+import java.sql.SQLException;
+import java.util.*;
 
 public class VoitureController {
     private List<Voiture> voitures;
-    private VoitureDAO voitureDAO;
+    private VoitureDAOImpl voitureDAOImpl;
 
-    public VoitureController(VoitureDAO voitureDAO) {
-        this.voitureDAO = voitureDAO;
-        // Charger les voitures depuis la base d1e données lors de la création du contrôleur
-        this.voitures = voitureDAO.getAllVoitures();
+    public VoitureController(VoitureDAOImpl voitureDAOImpl) {
+        this.voitureDAOImpl = voitureDAOImpl;
+        this.voitures = voitureDAOImpl.getAllVoitures();
     }
 
     // Méthode pour ajouter une voiture à la liste et à la base de données
-    public void ajouterVoiture(String voitureID, String modele, String marque, int type, float prix) {
+    public void ajouterVoiture(String voitureID, String modele, String marque, int type, float prix,boolean Disponibilite,String photo) {
         for (Voiture v : voitures) {
             if (v.getVoitureID().equals(voitureID)) {
                 System.out.println("Une voiture avec le même ID existe déjà dans la liste.");
@@ -26,13 +24,18 @@ public class VoitureController {
             }
         }
 
-        Voiture nouvelleVoiture = new Voiture(voitureID, modele, marque, type, prix);
+        Voiture nouvelleVoiture = new Voiture(voitureID, modele, marque, type, prix,true,photo);
 
         voitures.add(nouvelleVoiture);
-        voitureDAO.ajouterVoiture(nouvelleVoiture);
+        voitureDAOImpl.ajouterVoiture(nouvelleVoiture);
         System.out.println("Voiture ajoutée avec succès : " + nouvelleVoiture);
     }
-
+    public boolean voitureHasReservations(String voitureId) throws SQLException {
+        return voitureDAOImpl.voitureHasReservations(voitureId);
+    }
+    public void setVehicleUnavailable(String vehicleId) {
+        voitureDAOImpl.setVehicleUnavailable(vehicleId);
+    }
     public Voiture getVoitureById(String voitureId) {
         for (Voiture voiture : voitures) {
             if (voiture.getVoitureID().equals(voitureId)) {
@@ -61,7 +64,7 @@ public class VoitureController {
 
     public void modifierDisponibiliteVoiture(String id, boolean disponible) {
         // Modifier la disponibilité de la voiture dans la base de données
-        voitureDAO.modifierDisponibiliteVoiture(id, disponible);
+        voitureDAOImpl.modifierDisponibiliteVoiture(id, disponible);
 
         // Modifier la disponibilité de la voiture dans la liste de voitures du contrôleur
         for (Voiture voiture : voitures) {
@@ -87,7 +90,7 @@ public class VoitureController {
 
         if (voitureToRemove != null) {
             // Supprimer la voiture de la base de données
-            voitureDAO.supprimerVoiture(voitureId);
+            voitureDAOImpl.supprimerVoiture(voitureId);
 
             // Supprimer la voiture de la liste de voitures du contrôleur
             if (voitures.remove(voitureToRemove)) {
@@ -100,9 +103,26 @@ public class VoitureController {
         }
     }
 
+    public List<Voiture> getVoituresDisponibles() {
+        return voitureDAOImpl.getVoituresDisponibles();
+    }
+
+
+    public List<Voiture> getVoitures() {
+        return voitures; // Retourne la liste des voitures gérées par le contrôleur
+    }
+
+    public Map<String, Integer> getTypeCount() {
+        return voitureDAOImpl.getTypeCount();
+    }
+
+    // Méthode pour accéder à VoitureDAO depuis d'autres classes
 
 
 
+    public VoitureDAOImpl getVoitureDAO() {
+        return this.voitureDAOImpl;
+    }
 
 
 
