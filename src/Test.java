@@ -1,42 +1,34 @@
-import Controller.Controller;
 import DAO.*;
 
+import Controller.VoitureController;
+import View.AdminMain;
+import View.LoginTypeForm;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
+import javax.swing.*;
 import java.sql.SQLException;
-import java.time.LocalDate;
-
+import Controller.Controller;
+import DAO.*;
 public class Test {
+
     public static void main(String[] args) {
         try {
-            VoitureDAOImpl voitureDAOImpl = new VoitureDAOImpl();
-            voitureDAOImpl.connect("jdbc:mysql://localhost:8889/Projet-LocationDeVoiture", "root", "root");
+            VoitureDAOImpl voitureDAO = new VoitureDAOImpl();
+            ClientDAOImpl clientDAO = new ClientDAOImpl();
+            ReservationDAOImpl reservationDAO = new ReservationDAOImpl();
 
-            ReservationDAOImpl reservationDAOImpl = new ReservationDAOImpl();
-            reservationDAOImpl.connect("jdbc:mysql://localhost:8889/Projet-LocationDeVoiture", "root", "root");
+            // Assurez-vous de connecter vos DAO ici
+            voitureDAO.connect("jdbc:mysql://localhost:3306/projet-locationdevoiture", "root", "");
+            clientDAO.connect("jdbc:mysql://localhost:3306/projet-locationdevoiture", "root", "");
+            reservationDAO.connect("jdbc:mysql://localhost:3306/projet-locationdevoiture", "root", "");
 
-            ClientDAOImpl clientDAOImpl = new ClientDAOImpl();
-            clientDAOImpl.connect("jdbc:mysql://localhost:8889/Projet-LocationDeVoiture", "root", "root");
+            Controller controller = new Controller(voitureDAO, clientDAO, reservationDAO);
 
-            Controller controller = new Controller(voitureDAOImpl,clientDAOImpl,reservationDAOImpl);
-
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yy");
-            LocalDate dateDebut = LocalDate.parse("01/01/01", formatter);
-            LocalDate dateFin = LocalDate.parse("03/01/01", formatter);
-
-            controller.voitureController.ajouterVoiture("sfsdrsf","dfsdfdsf","dsfdsf",1,23432);
-            controller.clientController.ajouterClient("dasdsafsd","dasdsad","Martin","de Peretti",1,true);
-
-            System.out.println(controller.voitureController.getVoitureById("sfsdrsf"));
-            System.out.println(controller.clientController.getClientByMail("dasdsafsd"));
-
-            controller.ajouterReservation(dateDebut,dateFin,controller.voitureController.getVoitureById("sfsdrsf"),controller.clientController.getClientByMail("dasdsafsd"));
-
-            System.out.println(controller.toString());
-            // Affiche la liste des voitures
-        } catch (SQLException | ClassNotFoundException e) {
+            // Remplacer AdminMain par LoginForm
+            boolean isAdmin = false; // Mettez ceci à true si vous voulez lancer directement la connexion admin
+            new LoginTypeForm(clientDAO,controller).setVisible(true); // LoginForm attend un boolean pour savoir s'il s'agit d'une connexion admin ou non
+        } catch (Exception e) {
             e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "Erreur de connexion à la base de données.");
         }
     }
 }
