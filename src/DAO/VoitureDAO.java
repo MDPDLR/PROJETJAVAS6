@@ -3,6 +3,8 @@ package DAO;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+
 import Model.Voiture;
 
 public interface VoitureDAO {
@@ -19,4 +21,9 @@ public interface VoitureDAO {
     void modifierDisponibiliteVoiture(String id, boolean disponible);
 
     public List<Voiture> getAllVoitures();
+
+    boolean voitureHasReservations(String voitureId) throws SQLException;
+
+    void setVehicleUnavailable(String vehicleId);
+    Map<String, Integer> getTypeCount();
 }
